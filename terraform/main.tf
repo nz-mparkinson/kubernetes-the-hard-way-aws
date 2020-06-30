@@ -122,6 +122,7 @@ resource "aws_instance" "control_nodes" {
   #security_groups       = ["${aws_security_group.terraform_security_group.name}"]
   vpc_security_group_ids = ["${aws_security_group.terraform_security_group.id}"]
   subnet_id              = "${aws_subnet.terraform_subnet.id}"
+  private_ip             = "${cidrhost(aws_vpc.terraform_vpc.cidr_block, 10 + count.index)}"
 
   #Create a number of EC2 instances for control nodes
   count = var.control_node_count
@@ -134,6 +135,7 @@ resource "aws_instance" "worker_nodes" {
   key_name      = "aws-key-pair"
   tags = {
     Name = "worker_nodes"
+    Test = "123"
   }
   root_block_device {
     delete_on_termination = "true"
@@ -142,6 +144,7 @@ resource "aws_instance" "worker_nodes" {
   #security_groups       = ["${aws_security_group.terraform_security_group.name}"]
   vpc_security_group_ids = ["${aws_security_group.terraform_security_group.id}"]
   subnet_id              = "${aws_subnet.terraform_subnet.id}"
+  private_ip             = "${cidrhost(aws_vpc.terraform_vpc.cidr_block, 20 + count.index)}"
 
   #Create a number of EC2 instances for worker nodes
   count = var.worker_node_count
